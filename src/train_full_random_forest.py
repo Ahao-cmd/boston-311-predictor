@@ -6,6 +6,8 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
+import joblib
+from pathlib import Path
 
 from sklearn.metrics import (
     accuracy_score,
@@ -262,3 +264,29 @@ print(
         labels=[0, 1]
     )
 )
+
+# 14. Save trained model
+
+model_dir = Path("models")
+model_dir.mkdir(parents=True, exist_ok=True)
+
+model_path = model_dir / "random_forest_v1.joblib"
+
+model_bundle = {
+    "pipeline": model,
+    "threshold": SELECTED_THRESHOLD,
+    "features": features,
+    "model_name": "Random Forest",
+    "target_labels": {
+        0: "ONTIME",
+        1: "OVERDUE"
+    }
+}
+
+joblib.dump(
+    model_bundle,
+    model_path,
+    compress=3
+)
+
+print("\nModel saved to:", model_path)
